@@ -6,7 +6,6 @@ SERVER = "api.fda.gov"
 RESOURCE = '/drug/label.json?limit=100&skip='+str(skip_number)+'&search=substance_name:"ASPIRIN"'
 headers={'User-Agent':'http-client'}
 #headers le dices el nombre de tu navegador (chrome, firefox)
-
 while skip_number!=100:
     conexion = http.client.HTTPSConnection(SERVER)
     # Creo una conexion con la pagina fda. Abro un canal con esa pagina
@@ -25,11 +24,16 @@ while skip_number!=100:
         #Cierro la conexión con la pagina
         info = json.loads(label)
         # Cargas toodo el fichero json y lo guardas en una variable, y se lo coloca bien. Es la estructura del fichero
-        for i in range(len (info['results'])):
-            medicamento_info=info['results'][i]
-            print("El ID del medicamento",[i],"es: ", medicamento_info['id'])
-            if (medicamento_info['openfda']):
-                print("El medicamento lo fabrica:",medicamento_info['openfda']['manufacturer_name'][0])
-        if (len(info['results'])>100):
-            break
-        skip_number=skip_number+100
+        # Creo un try-except para comprobar que existe el nombre del fabricante, y el programa no se pare por completo
+        try:
+            for i in range(len (info['results'])):
+                medicamento_info=info['results'][i]
+                print("El ID del medicamento",[i],"es: ", medicamento_info['id'])
+                if (medicamento_info['openfda']):
+                    print("El medicamento lo fabrica:",medicamento_info['openfda']['manufacturer_name'][0])
+            if (len(info['results'])>100):
+                break
+            skip_number=skip_number+100
+            continue
+        except KeyError:
+            print("Atención, se desconoce el nombre del fabricante")
