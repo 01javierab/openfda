@@ -2,11 +2,11 @@ import http.client
 import json
 
 skip_number=0
-SERVER = "api.fda.gov"
-RESOURCE = '/drug/label.json?limit=100&skip='+str(skip_number)+'&search=substance_name:"ASPIRIN"'
 headers={'User-Agent':'http-client'}
 #headers le dices el nombre de tu navegador (chrome, firefox)
-while skip_number!=100:
+while True:
+    SERVER = "api.fda.gov"
+    RESOURCE = '/drug/label.json?limit=100&skip=' + str(skip_number) + '&search=substance_name:"ASPIRIN"'
     conexion = http.client.HTTPSConnection(SERVER)
     # Creo una conexion con la pagina fda. Abro un canal con esa pagina
     conexion.request("GET", RESOURCE, None, headers)
@@ -28,10 +28,10 @@ while skip_number!=100:
         try:
             for i in range(len (info['results'])):
                 medicamento_info=info['results'][i]
-                print("El ID del medicamento",[i],"es: ", medicamento_info['id'])
+                print("El ID del medicamento",[i+1],"es: ", medicamento_info['id'])
                 if (medicamento_info['openfda']):
                     print("El medicamento lo fabrica:",medicamento_info['openfda']['manufacturer_name'][0])
-            if (len(info['results'])>100):
+            if (len(info['results'])<100):
                 break
             skip_number=skip_number+100
             continue
