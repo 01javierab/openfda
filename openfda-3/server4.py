@@ -7,7 +7,7 @@ import json
 SERVER = "api.fda.gov"
 RESOURCE = "/drug/label.json?limit=10"
 PORT = int(input("Usuario introduzca el número del puerto: "))
-if PORT <=1023 or  PORT >= 65536:
+if PORT <=1023 or  PORT >= 65536:   #Entre esos valores, no se puede establecer ningún puerto ya que no existen o estan reservados.
     print("Error usando el puerto")
 else:
     def medicamento_pedir():
